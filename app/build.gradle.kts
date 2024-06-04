@@ -25,7 +25,7 @@ android {
         buildConfigField(
             "String",
             "apiKey",
-            "\"AIzaSyCY1fCfcwZW7Yuj7dv77lQIC3SbxSSun4k\""
+            "\"\""
         )
     }
 
