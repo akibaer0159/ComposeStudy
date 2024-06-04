@@ -17,7 +17,7 @@ private val Context.userListProto: DataStore<userListProto> by dataStore(
     serializer = UserListSerializer
 )
 
-class     UserInfoRepo @Inject constructor(@ApplicationContext private val context: Context) {
+class UserInfoRepo @Inject constructor(@ApplicationContext private val context: Context) {
     val userListDataStore = context.userListProto.data
 
     suspend fun addUser(userInfo: UserInfo) {

@@ -29,6 +29,9 @@
         <activity
             android:name=".DetailActivity"
             android:theme="@style/Theme.ComposeStudy" />
+        <activity
+            android:name=".GeminiActivity"
+            android:theme="@style/Theme.ComposeStudy" />
     </application>
 
 </manifest>

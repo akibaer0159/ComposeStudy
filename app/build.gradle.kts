@@ -21,6 +21,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField(
+            "String",
+            "apiKey",
+            "\"AIzaSyCY1fCfcwZW7Yuj7dv77lQIC3SbxSSun4k\""
+        )
     }
 
     buildTypes {
@@ -92,6 +98,9 @@ dependencies {
     //hilt
     implementation("com.google.dagger:hilt-android:2.49")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.generativeai)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation(libs.androidx.appcompat)

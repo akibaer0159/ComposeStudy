@@ -1,5 +1,6 @@
 package com.example.composestudy.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,9 +30,11 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -59,6 +63,7 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.composestudy.DetailActivity
+import com.example.composestudy.GeminiActivity
 import com.example.composestudy.R
 import com.example.composestudy.data.UserInfo
 import com.example.composestudy.extension.dropDownBorder
@@ -95,6 +100,7 @@ fun MainScreen(listViewModel: ListViewModel = hiltViewModel()) {
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainContent(
     name: String,
@@ -111,72 +117,96 @@ fun MainContent(
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
     val isShowTeamDialog = remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
-    Box(modifier = Modifier.background(Color.White)) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            TeamDialog(
-                isShowTeamDialog = isShowTeamDialog,
-                teamList = teamList,
-                team = team,
-                onTeamSelected = onTeamSelected,
-            )
-
-            Text(
-                text = "Hello, $name",
-                modifier = Modifier.padding(bottom = 8.dp),
-                style = MaterialTheme.typography.headlineLarge
-            )
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(60.dp)) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                context.startActivity(GeminiActivity.newInstance(context))
+            }) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "add",
+                )
+            }
+        },
+        content = {
+            Box(modifier = Modifier.background(Color.White)) {
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
+                    modifier = Modifier.padding(16.dp)
                 ) {
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = onNameChange,
-                        placeholder = { Text(text = "name", color = grayBB) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                onInputName()
-                                onNameChange("")
-                                keyboard?.hide()
-                            },
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                    TeamDialog(
+                        isShowTeamDialog = isShowTeamDialog,
+                        teamList = teamList,
+                        team = team,
+                        onTeamSelected = onTeamSelected,
                     )
-                }
-                Spacer(Modifier.size(10.dp))
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                ) {
-                    CustomDropDown(defaultValue = job, itemList = jobList, onItemSelected = onJobSelected)
-                }
-                Spacer(Modifier.size(10.dp))
-                Column(
-                    modifier = Modifier
-                        .weight(0.7f)
-                        .fillMaxHeight()
-                ) {
-                    Button(
-                        modifier = Modifier.fillMaxSize(),
-                        onClick = { isShowTeamDialog.value = true },
-                        shape = RoundedCornerShape(4.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = buttonOK),
+
+                    Text(
+                        text = "Hello, $name",
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.height(60.dp)
                     ) {
-                        Text(text = "Team", fontSize = 14.sp)
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        ) {
+                            OutlinedTextField(
+                                value = name,
+                                onValueChange = onNameChange,
+                                placeholder = { Text(text = "name", color = grayBB) },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        onInputName()
+                                        onNameChange("")
+                                        keyboard?.hide()
+                                    },
+                                ),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        Spacer(Modifier.size(10.dp))
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        ) {
+                            CustomDropDown(
+                                defaultValue = job,
+                                itemList = jobList,
+                                onItemSelected = onJobSelected
+                            )
+                        }
+                        Spacer(Modifier.size(10.dp))
+                        Column(
+                            modifier = Modifier
+                                .weight(0.7f)
+                                .fillMaxHeight()
+                        ) {
+                            Button(
+                                modifier = Modifier.fillMaxSize(),
+                                onClick = { isShowTeamDialog.value = true },
+                                shape = RoundedCornerShape(4.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = buttonOK),
+                            ) {
+                                Text(text = "Team", fontSize = 14.sp)
+                            }
+                        }
                     }
+                    UserListView(userList = nameList, onItemLongClick)
                 }
             }
-            UserListView(userList = nameList, onItemLongClick)
         }
-    }
+    )
+
+
 }
 
 @Composable
@@ -203,7 +233,11 @@ fun UserListView(userList: userListProto, onItemLongClick: (userInfoProto) -> Un
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomDropDown(defaultValue: String, itemList: ArrayList<String>, onItemSelected: (String) -> Unit) {
+fun CustomDropDown(
+    defaultValue: String,
+    itemList: ArrayList<String>,
+    onItemSelected: (String) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
@@ -221,7 +255,9 @@ fun CustomDropDown(defaultValue: String, itemList: ArrayList<String>, onItemSele
         },
     ) {
         Row(
-            modifier = Modifier.fillMaxSize().menuAnchor(),
+            modifier = Modifier
+                .fillMaxSize()
+                .menuAnchor(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Spacer(modifier = Modifier.width(16.dp))
