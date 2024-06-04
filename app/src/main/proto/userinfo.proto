@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_package = "com.example.composestudy";
+option java_multiple_files = true;
+
+message userInfoProto {
+  bool isOnOff = 1;
+  string userName = 2;
+  string usePosition = 3;
+  string userTeamName = 4;
+  string userId = 5;
+}
+
+message userListProto {
+  repeated userInfoProto userInfoList = 1;
+}
